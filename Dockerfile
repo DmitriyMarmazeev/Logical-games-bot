@@ -12,5 +12,7 @@ RUN chmod +x /docker-entrypoint.sh
 
 VOLUME /app/data
 
+EXPOSE $PORT
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["python", "main.py"]
