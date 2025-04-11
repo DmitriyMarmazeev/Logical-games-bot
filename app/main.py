@@ -42,6 +42,6 @@ if __name__ == "__main__":
     if os.getenv("RENDER"):
         loop = asyncio.get_event_loop()
         loop.create_task(start_webapp())
-        executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
+        executor.start_polling(dp, on_startup=send_to_admin, skip_updates=True)
     else:
         executor.start_polling(dp, on_startup=send_to_admin, skip_updates=True)
