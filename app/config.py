@@ -3,7 +3,6 @@ import os
 # Данные для бота
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-PUBLIC_TOKEN = os.getenv("PUBLIC_TOKEN")
 YOOMONEY_TOKEN = os.getenv("YOOMONEY_TOKEN")
 YOOMONEY_WALLET = os.getenv("YOOMONEY_WALLET")
 admin_id = int(os.getenv("admin_id"))
