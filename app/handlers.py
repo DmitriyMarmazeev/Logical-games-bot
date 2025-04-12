@@ -123,7 +123,7 @@ def check_payment(user):
                 db.update_info(user, 'donate_status', 1)
                 db.update_info(user, 'payment_status', '0')
                 loop = asyncio.get_event_loop()
-                loop.run_until_complete(send_database())
+                loop.create_task(send_database())
                 return True
     return False
 
