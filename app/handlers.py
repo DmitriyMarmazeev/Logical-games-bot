@@ -122,7 +122,8 @@ def check_payment(user):
             if operation.status == 'success':
                 db.update_info(user, 'donate_status', 1)
                 db.update_info(user, 'payment_status', '0')
-                asyncio.run(send_database())
+                loop = asyncio.get_event_loop()
+                loop.run_until_complete(send_database())
                 return True
     return False
 
