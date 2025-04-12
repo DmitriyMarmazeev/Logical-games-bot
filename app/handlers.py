@@ -1,6 +1,7 @@
 import random
 
 import emoji
+import asyncio
 from asyncio import sleep
 
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, InlineKeyboardMarkup, \
@@ -113,12 +114,15 @@ async def payment(user):
 
 def check_payment(user):
     if db.get_info(user, 'payment_status') != '0':
+        if db.get_info(user, 'donate_status') == 1:
+            return True
         client = Client(YOOMONEY_TOKEN)
         history = client.operation_history(label=db.get_info(user, 'payment_status'))
         for operation in history.operations:
             if operation.status == 'success':
                 db.update_info(user, 'donate_status', 1)
                 db.update_info(user, 'payment_status', '0')
+                asyncio.run(send_database())
                 return True
     return False
 
@@ -924,19 +928,23 @@ async def UserInfo(message: Message, state: FSMContext):
 
 
 @dp.message_handler(commands='database', chat_type='private')
-async def send_database(message: Message):
+async def send_database_to_admin(message: Message):
     user = message.from_user.id
     
     if user != admin_id:
         await message.answer("⛔ У вас нет прав доступа к этой команде")
         return
     
+    await send_database()
+
+
+async def send_database():
     try:
         db_path = './data/database.db'
         
-        await message.answer_document(
+        await bot.send_document(chat_id=admin_id,
             document=InputFile(db_path),
             caption="📦 Актуальная копия базы данных"
         )
     except Exception as e:
-        await message.answer(f"❌ Ошибка при отправке базы данных: {str(e)}")
+        await bot.send_message(chat_id=admin_id, text=f"❌ Ошибка при отправке базы данных: {str(e)}")
